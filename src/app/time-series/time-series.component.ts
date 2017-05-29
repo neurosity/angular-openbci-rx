@@ -5,7 +5,7 @@ import { SmoothieChart, TimeSeries } from 'smoothie';
 import { ChartService } from '../shared/chart.service';
 import * as io from 'socket.io-client';
 
-const wsUrl = 'http://localhost:4300';
+const wsUrl = 'http://localhost:4301';
 const wsEvent = 'metric:eeg';
 
 @Component({
