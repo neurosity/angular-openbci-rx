@@ -34,6 +34,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   timer$ = Observable.interval(this.samplesPerMills).take(this.sampleRate)
   canvases = Array(this.channels).fill(0).map(() => new SmoothieChart(this.options));
   lines = Array(this.channels).fill(0).map(() => new TimeSeries());
+  eeg$ = Observable.fromEvent<number[][]>(this.socket, wsEvent);
+
+  buffer$ = this.eeg$
+    .mergeMap(channels =>
+      channels.map((data, channelIndex) => 
+        Observable.from(data)
+          .zip(
+            Observable.timer(0, this.samplesPerMills), 
+            amplitude => amplitude
+          )
+          .take(this.sampleRate)
+          .do(amplitude => this.draw(amplitude, channelIndex))
+      ))
+      .mergeMap(eeg => eeg);
   
   ngAfterViewInit () {
     const channels = this.view.nativeElement.querySelectorAll('canvas');
@@ -44,7 +58,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   ngOnInit () {
     this.addTimeSeries();
-    this.startStream();
+    this.buffer$.subscribe();
   }
 
   addTimeSeries () {
@@ -53,19 +67,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         lineWidth: 2,
         strokeStyle: this.colors[index].borderColor
       });
-    });
-  }
-
-  startStream () {
-    this.stream$ = Observable.fromEvent(this.socket, wsEvent)
-      .subscribe(this.onBuffer.bind(this));
-  }
-
-  onBuffer (channels) {
-    channels.forEach((channel, index) => {
-      Observable.from(channel)
-        .zip(Observable.interval(this.samplesPerMills), i => i)
-        .subscribe(amplitude => this.draw(amplitude, index));
     });
   }
 
