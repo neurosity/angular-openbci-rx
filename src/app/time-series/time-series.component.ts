@@ -19,12 +19,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   constructor(private view: ElementRef, private chartService: ChartService) {}
   
-  plotDelay = 3000;
   channels = 8;
+  plotDelay = 1000;
   amplitudes = [];
   socket = io(wsUrl);
-  options = this.chartService.getChartSmoothieDefaults({ millisPerPixel: 3 });
   colors = this.chartService.getColors();
+  options = this.chartService.getChartSmoothieDefaults();
   canvases = Array(this.channels).fill(0).map(() => new SmoothieChart(this.options));
   lines = Array(this.channels).fill(0).map(() => new TimeSeries());
   stream$ = fromEvent(this.socket, wsEvent)
