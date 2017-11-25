@@ -1,5 +1,5 @@
 {
-  "name": "angular-timerseries",
+  "name": "angular-openbci",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -22,8 +22,9 @@
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
     "core-js": "^2.4.1",
-    "openbci-rx": "^0.1.0",
-    "rxjs": "^5.1.0",
+    "eeg-pipes": "0.0.1",
+    "openbci-observable": "^1.0.3",
+    "rxjs": "^5.5.2",
     "smoothie": "^1.29.1",
     "socket.io": "^2.0.1",
     "socket.io-client": "^2.0.1",
