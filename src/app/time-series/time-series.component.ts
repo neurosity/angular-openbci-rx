@@ -3,7 +3,9 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { SmoothieChart, TimeSeries } from 'smoothie';
 import { ChartService } from '../shared/chart.service';
 import { fromEvent } from 'rxjs/observable/fromEvent';
+import { interval } from 'rxjs/observable/interval';
 import { mergeMap } from 'rxjs/operators/mergeMap';
+import { zip } from 'rxjs/operators/zip';
 import { tap } from 'rxjs/operators/tap';
 import * as io from 'socket.io-client';
 
@@ -27,10 +29,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   options = this.chartService.getChartSmoothieDefaults();
   canvases = Array(this.channels).fill(0).map(() => new SmoothieChart(this.options));
   lines = Array(this.channels).fill(0).map(() => new TimeSeries());
-  stream$ = fromEvent(this.socket, wsEvent)
+
+  stream$ = fromEvent(this.socket, wsEvent);
+  amplitudes$ = this.stream$
     .pipe(
-      mergeMap(sample => (sample as any)),
-      tap(sample => this.draw(sample))
+      mergeMap(samples => (samples as any)),
+      zip(interval(4), sample => sample)
     );
   
   ngAfterViewInit () {
@@ -42,7 +46,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   ngOnInit () {
     this.addTimeSeries();
-    this.stream$.subscribe();
+    this.amplitudes$.subscribe(sample => this.updateAmplitude(sample));
+    this.stream$.subscribe(buffer => {
+      (buffer as any).forEach(sample => this.draw(sample));
+    });
   }
 
   addTimeSeries () {
@@ -57,6 +64,11 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   draw (sample) {
     sample.data.forEach((amplitude, index) => {
       this.lines[index].append(sample.timestamp, amplitude);
+    });
+  }
+
+  updateAmplitude (sample) {
+    sample.data.forEach((amplitude, index) => {
       this.amplitudes[index] = amplitude.toFixed(2);
     });
   }
