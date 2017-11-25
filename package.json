@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
     "core-js": "^2.4.1",
-    "eeg-pipes": "0.0.1",
+    "eeg-pipes": "0.0.2",
     "openbci-observable": "^1.0.3",
     "rxjs": "^5.5.2",
     "smoothie": "^1.29.1",

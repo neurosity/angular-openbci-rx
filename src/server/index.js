@@ -1,7 +1,6 @@
 
 const { Cyton } = require('openbci-observable');
-const { bufferCount } = require('rxjs/operators');
-const { voltsToMicrovolts } = require('eeg-pipes');
+const { voltsToMicrovolts, bufferCount } = require('eeg-pipes');
 const io = require('socket.io')(4301);
 
 const simulate = process.argv[2] === '--simulate';
@@ -14,12 +13,7 @@ async function init () {
 
     brain.stream
         .pipe(voltsToMicrovolts(), bufferCount(250))
-        .subscribe(sendToBrowser);
-}
-
-function sendToBrowser (buffer) {
-    // console.log(buffer);
-    io.emit('metric:eeg', buffer);
+        .subscribe(eeg => io.emit('metric:eeg', eeg));
 }
 
 init();
