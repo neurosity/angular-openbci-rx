@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators/tap';
 import * as io from 'socket.io-client';
 
 const wsUrl = 'http://localhost:4301';
-const wsEvent = 'metric:eeg';
+const wsEvent = 'metric/eeg';
 
 @Component({
   selector: 'time-series',
