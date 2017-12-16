@@ -12,6 +12,11 @@ import * as io from 'socket.io-client';
 const wsUrl = 'http://localhost:4301';
 const wsEvent = 'metric/eeg';
 
+const channelsByBoard = {
+  cyton: 8,
+  ganglion: 4
+};
+
 @Component({
   selector: 'time-series',
   templateUrl: 'time-series.component.html',
@@ -21,7 +26,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   constructor(private view: ElementRef, private chartService: ChartService) {}
   
-  channels = 8;
+  boardName = 'ganglion';
+  channels = channelsByBoard[this.boardName];
   plotDelay = 1000;
   amplitudes = [];
   socket = io(wsUrl);

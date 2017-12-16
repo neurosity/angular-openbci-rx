@@ -4,7 +4,7 @@ const { Wifi } = require('openbci-observable');
 const { voltsToMicrovolts, bufferTime } = require('eeg-pipes');
 const io = require('socket.io')(4301);
 
-async function init () {
+(async function init () {
     const brain = new Wifi({ verbose: true });
     await brain.connect({ ipAddress: process.env.OPENBCI_IP });
     await brain.start();
@@ -15,6 +15,4 @@ async function init () {
             console.log(eeg);
             io.emit('metric/eeg', eeg);
         });
-}
-
-init();
+})();

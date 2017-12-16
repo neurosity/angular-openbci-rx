@@ -3,6 +3,8 @@
   display: flex;
   position: relative;
   font-family: Roboto, sans-serif;
+  align-items: center;
+  height: 100vh;
 }
 
 .time-series {
