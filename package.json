@@ -26,6 +26,7 @@
     "core-js": "^2.4.1",
     "dotenv": "^4.0.0",
     "eeg-pipes": "0.0.2",
+    "ganglion-ble": "^0.1.4",
     "openbci-observable": "^1.0.4",
     "rxjs": "^5.5.2",
     "smoothie": "^1.29.1",
