@@ -3,9 +3,7 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { SmoothieChart, TimeSeries } from 'smoothie';
 import { ChartService } from '../shared/chart.service';
 import { interval } from 'rxjs/observable/interval';
-import { mergeMap } from 'rxjs/operators/mergeMap';
-import { zip } from 'rxjs/operators/zip';
-import { tap } from 'rxjs/operators/tap';
+import { zip, tap, mergeMap } from 'rxjs/operators';
 
 const channelsByBoard = {
   cyton: 8,
@@ -21,9 +19,7 @@ export class TimeSeriesComponent implements OnInit {
 
   constructor(private view: ElementRef, private chartService: ChartService) {}
   
-  @Input()
-  stream$;
-
+  @Input() stream$;
   boardName = 'ganglion';
   channels = channelsByBoard[this.boardName];
   plotDelay = 1000;
@@ -50,7 +46,7 @@ export class TimeSeriesComponent implements OnInit {
         mergeMap(samples => (samples as any)),
         zip(interval(4), sample => sample)
       ).subscribe(sample => this.updateAmplitude(sample));
-      
+
     this.stream$.subscribe(buffer => {
       (buffer as any).forEach(sample => this.draw(sample));
     });

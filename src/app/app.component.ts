@@ -2,21 +2,16 @@ import { Component, OnDestroy } from '@angular/core';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import * as io from 'socket.io-client';
 
-const wsUrl = 'http://localhost:4301';
-const wsEvent = 'metric/eeg';
-
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: `<time-series [stream$]="stream$"></time-series>`
 })
 export class AppComponent implements OnDestroy {
-  title = 'Brainwaves!';
-  
-  socket = io(wsUrl);
-  stream$ = fromEvent(this.socket, wsEvent);
-
+  wsEvent = 'metric/eeg';
+  socket = io('http://localhost:4301');
+  stream$ = fromEvent(this.socket, this.wsEvent);
   ngOnDestroy () {
-    this.socket.removeListener(wsEvent);
+    this.socket.removeListener(this.wsEvent);
   }
 }
+
